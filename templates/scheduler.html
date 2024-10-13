@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Reminder System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            padding: 20px;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 20px;
+            font-size: 18px;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .home-button {
+            background-color: #6c757d;
+        }
+
+        .home-button:hover {
+            background-color: #5a6268;}
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <button class="button home-button" onclick="window.location.href='/'">Home</button>
+        <h1>Set a Reminder</h1>
+        <form action="/submit" method="POST" id="reminderForm">
+            <label for="reminder_type">Reminder Type:</label>
+            <select id="reminder_type" name="reminder_type" onchange="showFields()">
+                <option value="medication">Medication</option>
+                <option value="doctor_appointment">Doctor's Appointment</option>
+            </select>
+
+            <!-- Medication Reminder Fields -->
+            <div id="medication_fields">
+                <label for="name">Patient Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="medication">Medication:</label>
+                <input type="text" id="medication" name="medication">
+
+                <label for="reminder_time">Reminder Time (HH:MM):</label>
+                <input type="text" id="reminder_time" name="reminder_time" placeholder="09:00" required>
+            </div>
+
+            <!-- Doctor's Appointment Fields -->
+            <div id="doctor_fields" class="hidden">
+                <label for="appointment_time">Appointment Time (HH:MM):</label>
+                <input type="text" id="appointment_time" name="appointment_time" placeholder="14:00">
+
+                <label for="hospital_name">Hospital Name:</label>
+                <input type="text" id="hospital_name" name="hospital_name">
+
+                <label for="hospital_address">Hospital Address:</label>
+                <textarea id="hospital_address" name="hospital_address"></textarea>
+            </div>
+
+            <button type="submit">Set Reminder</button>
+        </form>
+    </div>
+
+    <script>
+        function showFields() {
+            var type = document.getElementById("reminder_type").value;
+
+            // Get the form fields
+            var medicationFields = document.getElementById("medication_fields");
+            var doctorFields = document.getElementById("doctor_fields");
+
+
+            // Toggle visibility and required attributes based on the reminder type
+            if (type === "medication") {
+                medicationFields.classList.remove("hidden");
+                doctorFields.classList.add("hidden");
+
+                document.getElementById("name").required = true;
+                document.getElementById("reminder_time").required = true;
+
+                // Remove required attributes from doctor's appointment fields
+                document.getElementById("appointment_time").required = false;
+                document.getElementById("hospital_name").required = false;
+                document.getElementById("hospital_address").required = false;
+
+            } else if (type === "doctor_appointment") {
+                medicationFields.classList.add("hidden");
+                doctorFields.classList.remove("hidden");
+
+                // Make doctor's appointment fields required
+                document.getElementById("appointment_time").required = true;
+                document.getElementById("hospital_name").required = true;
+                document.getElementById("hospital_address").required = true;
+
+                // Remove required attributes from medication fields
+                document.getElementById("name").required = false;
+                document.getElementById("reminder_time").required = false;
+            }
+        }
+
+        // Initialize the fields visibility on page load
+        window.onload = showFields;
+    </script>
+</body>
+</html>
